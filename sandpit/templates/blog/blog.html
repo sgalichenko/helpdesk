@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Blog{% endblock %}
+
+{% block content %}
+
+	<h1>Notes</h1>
+
+	<!-- {% load staticfiles %}
+	<img src="{% static 'media/default.jpg' %}" />
+	-->
+
+	<!-- <img src="{{ MEDIA_URL }}blog/media/images/default.jpg" width="500" />
+	<br /><br /><br />
+	-->
+
+	
+	{% if user.is_authenticated %}
+		<a href="/add-note/" id="button">Add note</a>
+	{% endif %}
+	
+	{% for note in notes %}
+		<div class="post">
+			<h2><a href="/note/{{ note.id }}">{{ note }}</a></h2>
+			<small>Author: <a href="/user/{{ note.author.id }}/">{{ note.author }}</a>, Date: {{ note.publication_date|date:"d M. Y H:i" }}</small>
+			<p>{{ note.text | truncatewords:150 }}<!--<br /><a href="/note/{{ note.id }}">[Read more]</a>--></p>
+			<small>{{ note.comment_set.count }} comments</small><br />
+		</div>
+
+		<!--<table class="post">
+			<tr id="postheader"> 
+				<td id="tdhead"><h2><a href="/note/{{ note.id }}">{{ note }}</a></h2></td>
+			</tr>
+			<tr> 
+				<td><p>{{ note.text | truncatewords:150 }}<br /><a href="/note/{{ note.id }}">[Read more]</a></p></td>
+			</tr>
+			<tr>
+				<td><small>Author: <a href="/user/{{ note.author.id }}/">{{ note.author }}</a>, Date: {{ note.publication_date }}</small></td>
+			</tr>
+		</table>-->
+		
+	{% endfor %}
+
+
+	<div class="pagination">
+		<span class="step-links">
+			{% if notes.has_previous %}
+				<a href="?page={{ notes.previous_page_number }}">previous</a>
+			{% endif %}
+
+			<span class="current">
+				Page {{ notes.number }} of {{ notes.paginator.num_pages }}
+			</span>
+
+
+			{% if notes.has_next %}
+				<a href="?page={{ notes.next_page_number }}">next</a>
+			{% endif %}
+		</span>
+	</div>
+
+{% endblock %}

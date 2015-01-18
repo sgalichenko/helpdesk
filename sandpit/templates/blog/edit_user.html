@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Sign up{% endblock %}
+
+{% block content %}
+    
+    {% if not user.is_authenticated %}
+
+        <h1>You are not allowed to do that</h1>
+
+    {% else %}
+
+        <h1>Profile</h1>
+
+        {% if userForm.errors %}
+            <p style="color: red;">
+                Please correct the error{{ userForm.errors | pluralize }} below.
+            </p>
+        {% endif %}
+
+        <form action="" method="POST" enctype="multipart/form-data">
+            <table>
+                {{ userForm.as_table }}
+                {{ profileForm.as_table }}
+            </table>
+            {% csrf_token %}
+            <input type="submit" name="submit" value="Submit">
+        </form>
+
+        <p><a href="/passwd/" id="button">Change password</a></p>
+
+        <script type="text/javascript">$(".chosen").chosen();</script>
+
+
+        <!--<form action="" method="post">
+            <table>
+                {{ profileForm.as_table }}
+            </table>
+            {% csrf_token %}
+            <input type="submit" value="Submit">
+        </form>-->
+
+    {% endif %}
+
+{% endblock %}

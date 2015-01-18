@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Add note{% endblock %}
+
+{% block content %}
+
+    {% if form.errors %}
+        <p style="color: red;">
+            Please correct the error{{ form.errors|pluralize }} below.
+        </p>
+    {% endif %}
+
+    <form action="" method="post">
+        <table>
+            {{ form.as_table }}
+        </table>
+
+        <!-- <script type="text/javascript">
+            $(document).ready(function() {
+                $("#myTags").tagit();
+            });
+        </script>
+        <ul id="myTags">
+            <li>Tag1</li>
+            <li>Tag2</li>
+        </ul> -->
+
+
+        {% csrf_token %}
+        <input type="submit" value="Submit">
+    </form>
+    <br />
+    <a href="/" id="button">Go back</a>
+
+{% endblock %}

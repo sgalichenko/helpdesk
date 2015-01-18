@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}Helpdesk{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+	<!--<script>
+		$(function() {
+			$( "#tabs" ).tabs();
+		});
+	</script>
+
+	<div id="tabs">
+		<ul>
+			<li><a href="#opened">Opened</a></li>
+			<li><a href="#closed">Closed</a></li>
+		</ul>
+		<table>
+			<tr>
+				<th>ID</th>
+				<th>Title</th>
+				<th>User</th>
+				<th>Date</th>
+				<th>Assigned to</th>
+				<th>Open</th>
+			</tr>
+		
+			{% for ticket in tickets %}
+				{% for group in user.groups.all %} 
+					{% if group == ticket.group %}
+						{% if ticket.isopen == True %}
+							<tr id="opened">
+						{% else %}
+							<tr id="closed">
+						{% endif %}
+								<td>{{ ticket.id }}</td>
+								<td><a href="/ticket/{{ ticket.id }}/">{{ ticket.title }}</a></td>
+								<td>{{ ticket.author }}</td>
+								<td>{{ ticket.publication_date }}</td>
+								<td>{{ ticket.group }}</td>
+								<td>{{ ticket.isopen }}</td>
+							</tr>
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+		</table>
+	</div>-->
+
+
+	<script>
+	$(document).ready(function() {
+		$('#table_for_users').dataTable( {
+			"aaSorting": [[ 4, "desc" ],[ 2, "desc" ]],
+			"aoColumns": [
+				null,
+				null,
+				null,
+				null, 
+				null
+			]
+		} );
+
+		$('#table_for_staff').dataTable( {
+			"aaSorting": [[ 5, "desc" ],[ 3, "desc" ]],
+			"aoColumns": [
+				null,
+				null,
+				null,
+				null,
+				null, 
+				null
+			]
+		} );
+	} );
+	</script>
+
+	<h1>Helpdesk</h1>
+
+	<a href="/create-ticket/" id="button">Create ticket</a>
+
+	{% if not user.groups.all and not user.is_superuser and not user.is_staff %}
+		{% if not curusertickets %}
+			<p>There are no tickets here yet. To create one click on the "Create Ticket" button above.</p>
+		{% else %}
+			<h2>Your tickets:</h2>
+			<table id="table_for_users">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Title</th>
+						<th>Date</th>
+						<th>Assigned to</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for ticket in curusertickets %}
+						<tr>
+							<td>{{ ticket.id }}</td>
+							<td><a href="/ticket/{{ ticket.id }}/">{{ ticket.title }}</a></td>
+							<td>{{ ticket.publication_date }}</td>
+							<td>{{ ticket.group }}</td>
+							<td>
+								{% if ticket.isopen %}
+									Open
+								{% else %}
+									Closed
+								{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% endif %}
+	{% else %}
+		<table id="table_for_staff">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Title</th>
+					<th>User</th>
+					<th>Date</th>
+					<th>Assigned to</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for ticket in tickets %}
+					{% for group in user.groups.all %} 
+						{% if group == ticket.group %}
+							<tr>
+								<td>{{ ticket.id }}</td>
+								<td><a href="/ticket/{{ ticket.id }}/">{{ ticket.title }}</a></td>
+								<td><a href="/user/{{ ticket.author.id }}/">{{ ticket.author }}</a></td>
+								<td>{{ ticket.publication_date }}</td>
+								<td>{{ ticket.group }}</td>
+								<td>
+									{% if ticket.isopen %}
+										Open
+									{% else %}
+										Closed
+									{% endif %}
+								</td>
+							</tr>
+						{% endif %}
+					{% endfor %}
+				{% endfor %}
+			</tbody>
+		</table>
+	{% endif %}
+
+	<!-- <div class="pagination">
+		<span class="step-links">
+			{% if tickets.has_previous %}
+				<a href="?page={{ tickets.previous_page_number }}">previous</a>
+			{% endif %}
+
+			<span class="current">
+				Page {{ tickets.number }} of {{ tickets.paginator.num_pages }}
+			</span>
+
+
+			{% if tickets.has_next %}
+				<a href="?page={{ tickets.next_page_number }}">next</a>
+			{% endif %}
+		</span>
+	</div>-->
+
+{% endif %}
+{% endblock %}	

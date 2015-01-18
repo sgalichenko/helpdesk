@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}User page{% endblock %}
+
+{% block content %}
+	
+	<h1>{{ author }}</h1>
+	{% if author.userprofile.picture %}
+		<img src="{{ author.userprofile.picture.url }}" width="200" />
+		<br /><small>Picture path: {{ author.userprofile.picture.url }}</small>
+	{% else %}
+		<img src="{{ MEDIA_URL }}blog/media/images/default.jpg" width="200" />
+	{% endif %}
+	<div>
+		<p>First name: {{ author.first_name }}</p>
+		<p>Last name: {{ author.last_name }}</p>
+
+		{% if user.id == author.id or user.is_superuser %}
+			<p>Login: {{ author.username }}</p>
+			<p>Email: {{ author.email }}</p>
+		{% endif %}
+
+		{% if user.is_superuser %}
+			<p>Groups:
+				{{ author.groups.all | join:", " }}
+			</p>
+			<small>Password: {{ author.password }}</small>
+		{% endif %}
+	</div>
+
+	<br />
+	{% if user.is_superuser or user.id == author.id %}
+		<a href="/user/{{ author.id }}/edit/" id="button">Edit user</a>
+		<a href="/user/{{ author.id }}/delete/" id="button">Delete user</a>
+	{% endif %}
+	<a href="/user/{{ author.id }}/notes/" id="button">Go to notes written by this user</a>
+
+{% endblock %}

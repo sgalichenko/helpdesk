@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Note{% endblock %}
+	
+	{% load staticfiles %}
+	<!--<link rel="stylesheet" type="text/css" href="{% static "editor-master/editor.css" %}" />
+	<script type="text/javascript" src="{% static "editor-master/src/editor.js" %}"></script>
+	-->
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+{% block content %}
+
+    <h1>{{ note }}</h1>
+	Author: <a href="/user/{{ note.author.id }}/">{{ note.author }}</a><br />
+	Publication date: {{ note.publication_date|date:"d M. Y H:i" }}
+	
+	<div>
+		{{ note.text | striptags | urlize | linebreaks }}
+	</div>
+
+	{% if user.is_superuser or note.author == user %}
+		<a href="/note/{{ note.id }}/edit/" id="button">Edit note</a>
+		<a href="/note/{{ note.id }}/delete/" id="button">Delete note</a>
+	{% endif %}
+
+	<hr />
+	{% for comment in comments_list %}	
+		{% if note.author == comment.author %}
+			<div class="comment" id="authorcomment">
+		{% else %}
+			<div class="comment">
+		{% endif %}
+				<small>
+					Author:
+
+					{% if comment.author.userprofile.picture %}
+                        <img src="{{ comment.author.userprofile.picture.url }}" width="20" height="20" />
+                    {% else %}
+                        <img src="{{ MEDIA_URL }}blog/media/images/default.jpg" width="20" height="20" />
+                    {% endif %} 
+                    
+					<a href="/user/{{ comment.author.id }}/">{{ comment.author }}</a>, Date: {{ comment.publication_date|date:"d M. Y H:i" }}
+				</small>
+				<p>{{ comment.text }}</p>
+				{% if user.is_superuser or note.author == user %}
+					<a href="/comment/{{ comment.id }}/delete/" id="button">Delete this comment</a>
+					<div class="reply" id="button" onClick="document.getElementById('id_text').value+='{{ comment.author }}, '">Reply</div>
+				{% endif %}
+
+				<!-- FOR REPLYING
+				<script type="text/javascript">
+					function reply(){
+						document.getElementById('id_text').value+='{{ comment.author }}, '
+						document.getElementById('id_text').focus()
+						
+						elem=document.getElementById('id_text')
+				        var elemLen = elem.value.length;
+				        // For IE Only
+				        if (document.selection) {
+				            // Set focus
+				            elem.focus();
+				            // Use IE Ranges
+				            var oSel = document.selection.createRange();
+				            // Reset position to 0 & then set at end
+				            oSel.moveStart('character', -elemLen);
+				            oSel.moveStart('character', elemLen);
+				            oSel.moveEnd('character', 0);
+				            oSel.select();
+				        }
+				        else if (elem.selectionStart || elem.selectionStart == '0') {
+				            // Firefox/Chrome
+				            elem.selectionStart = elemLen;
+				            elem.selectionEnd = elemLen;
+				            elem.focus();
+				        } // if
+				    } // SetCaretAtEnd()
+				</script>
+				 ############ -->
+
+			</div>
+	{% endfor %}
+
+	{% if user.is_authenticated %}
+		<form action="" method="post">
+			<table>
+				{{ commentForm.as_table }}
+			</table>
+			{% csrf_token %}
+			<input type="submit" value="Submit">
+		</form>
+	{% endif %}
+
+{% endblock %}

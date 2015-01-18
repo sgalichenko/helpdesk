@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Create ticket{% endblock %}
+
+{% block content %}
+
+
+    {% if ticket.group in user.groups.all or ticket.author == user %}
+        <h1>{{ ticket.title }} (#{{ ticket.id }})</h1>
+
+        <div class="ticketinfo">
+            <p>
+                Status:
+                {% if ticket.isopen %}
+                    Open
+                {% else %}
+                    Closed
+                {% endif %}
+            </p>
+            Created by: <a href="/user/{{ ticket.author.id }}/">{{ ticket.author }}</a>
+            <p>Email: {{ ticket.email }}</p>
+            <p>Person: {{ ticket.person }}</p>
+            <p>Phone: {{ ticket.phone }}</p>
+            <p>Date: {{ ticket.publication_date }}</p>
+            <p>Assigned to: {{ ticket.group }}</p>
+        </div>
+        <div>{{ ticket.text | striptags | urlize | linebreaks }}</div>
+    {% else %}
+        <p>404</p>
+    {% endif %}
+
+
+    {% if user.is_superuser or user.is_staff %}
+        <a href="/ticket/{{ ticket.id }}/edit/" id="button">Edit ticket</a>
+        <a href="/ticket/{{ ticket.id }}/delete/" id="button">Delete ticket</a>
+    {% elif user == ticket.author %}
+        <a href="/ticket/{{ ticket.id }}/edit/" id="button">Edit ticket</a>
+    {% endif %}        
+
+    <hr />
+    <h2>Comments:</h2>
+    {% if not comments_list %}
+        There are no comments here yet. To add one fill in the textarea below.
+    {% else %}
+        {% for comment in comments_list %}  
+            <!--{% if ticket.author == comment.author %}
+                <div class="comment" id="authorcomment">
+            {% else %}
+                <div class="comment">
+            {% endif %}-->
+                <div class="comment">
+                    <small>
+                        Author:
+
+                        {% if comment.author.userprofile.picture %}
+                            <img src="{{ comment.author.userprofile.picture.url }}" width="20" height="20" />
+                        {% else %}
+                            <img src="{{ MEDIA_URL }}blog/media/images/default.jpg" width="20" height="20" />
+                        {% endif %} 
+                        
+                        <a href="/user/{{ comment.author.id }}/">{{ comment.author }}</a>, Date: {{ comment.publication_date|date:"d M. Y H:i" }}
+                    </small>
+                    {{ comment.text | striptags | urlize | linebreaks }}
+                    {% if user.is_superuser %}
+                        <a href="/comment/{{ comment.id }}/delete/" id="button">Delete this comment</a>
+                        <div class="reply" id="button" onClick="document.getElementById('id_text').value+='{{ comment.author }}, '">Reply</div>
+                    {% endif %}
+
+                </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if user.is_authenticated %}
+        <form action="" method="post">
+            <table>
+                {{ commentForm.as_table }}
+            </table>
+            {% csrf_token %}
+            <input type="submit" value="Submit">
+        </form>
+    {% endif %}
+
+
+{% endblock %}

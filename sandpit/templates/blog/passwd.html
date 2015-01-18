@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Changing password{% endblock %}
+
+{% block content %}
+    
+    {% if not user.is_authenticated %}
+
+        <h1>You are not allowed to do that</h1>
+
+    {% else %}
+
+        {% if userForm.errors %}
+            <p style="color: red;">
+                Please correct the error{{ userForm.errors | pluralize }} below.
+            </p>
+        {% endif %}
+
+        <form action="" method="POST" enctype="multipart/form-data">
+            <table>
+                {{ passwdForm.as_table }}
+            </table>
+            {% csrf_token %}
+            <input type="submit" name="submit" value="Submit">
+        </form>
+
+    {% endif %}
+
+{% endblock %}

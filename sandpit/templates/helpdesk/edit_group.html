@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Create users group{% endblock %}
+
+{% block content %}
+
+    {% if groupForm.errors %}
+        <p style="color: red;">
+            Please correct the error{{ groupForm.errors|pluralize }} below.
+        </p>
+    {% endif %}
+
+    <form action="" method="post">
+        <table>
+            {{ groupForm.as_table }}
+        </table>
+
+        {% csrf_token %}
+        <input type="submit" value="Submit">
+    </form>
+
+{% endblock %}

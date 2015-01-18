@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static "base.css" %}" />
+
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+
+
+    {{ form.media }}
+
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+
+    {% block header %}
+        <!--<nav>
+            {% if user.is_authenticated %}
+                {% if user.is_superuser %}
+                    <a href="/users/">Users</a>
+                {% endif %}
+                <a href="/">Notes</a>
+
+                <a href="/user/{{ user.id }}">
+                    {% if user.userprofile.picture %}
+                        <img src="{{ user.userprofile.picture.url }}" width="20" height="20" />
+                    {% else %}
+                        <img src="{{ MEDIA_URL }}blog/media/images/default.jpg" width="20" height="20" />
+                    {% endif %}
+                    
+                    {{ user }}
+                </a>
+                
+                <a href="/logout/">Log out</a> 
+            {% else %}
+                <a href="/signup/">Sign up</a>
+                <a href="/signin/">Sign in</a>
+            {% endif %}
+
+        </nav>-->
+    {% endblock %}
+
+    <div class="content">{% block content %}{% endblock %}</div>
+    
+
+
+
+
+    {% block footer %}{% endblock %}
+</body>
+</html>

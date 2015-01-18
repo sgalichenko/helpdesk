@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Create ticket{% endblock %}
+
+{% block content %}
+
+    {% if form.errors %}
+        <p style="color: red;">
+            Please correct the error{{ form.errors|pluralize }} below.
+        </p>
+    {% endif %}
+
+    <h1>Create Ticket</h1>
+    
+    <form action="" method="post">
+        <table>
+            <tbody>
+                {% for field in form %}
+                <tr>
+                    <th>
+                        <label for="{{ field.auto_id }}">
+                            {% if field.field.required %}
+                                <span class="required">{{ field.label }} *</span>
+                            {% else %}
+                                {{ field.label }}
+                            {% endif %}
+                        </label>
+                    </th>
+                    <td>
+                        {{ field.errors }}
+                        {{ field }}
+                    </td>
+                </tr>
+                 {% endfor %}
+            </tbody>
+        </table>
+    {% csrf_token %}
+    <input type="submit" value="Submit">
+    </form>
+
+    <!--<form action="" method="post">
+        <table>
+            {{ form.as_table }}
+        </table>
+
+        {% csrf_token %}
+        <input type="submit" value="Submit">
+    </form>-->
+
+{% endblock %}

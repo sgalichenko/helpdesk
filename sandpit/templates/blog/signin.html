@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    {% load staticfiles %}
+    
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static "base.css" %}" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+</head>
+
+{% block content %}
+
+    {% if user.is_authenticated %}
+
+        <h1>You are already signed in</h1>
+
+    {% else %}
+        
+        <div class="wrapper_sign">
+            <div class="formdiv">
+                <!--<h1>Sign In</h1>-->
+
+                       
+                {% if form.errors %}
+                    <p style="color: red;">
+                        Please correct the error{{ form.errors | pluralize }} below.
+                    </p>
+                {% endif %}
+
+                <form action="" method="post" class="signform">
+                    <table id="sign">
+                        {{ form.as_table }}
+                    </table>
+                    {% csrf_token %}
+                    <input type="submit" value="Sign in">
+                </form>
+            </div>
+        </div>
+
+
+        <!-- ### THIS STUFF IS FOR SOCIAL AUTH ### 
+        <ul>
+            <li>
+                <a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">Login with Facebook</a>
+            </li>
+            <li>
+                <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">Login with Google</a>
+            </li>
+            <li>
+                <a href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">Login with Twitter</a>
+            </li>
+        </ul>
+         ################################### -->
+
+
+    {% endif %}
+
+    <!--<a href="/" id="button">Go back</a>-->
+
+{% endblock %}
+</html>
